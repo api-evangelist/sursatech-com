@@ -1,0 +1,53 @@
+generated: '2026-09-19'
+method: searched
+probe: true
+source: 'Artifacts harvested this run (well-known/ — no security.txt; security/ — no trust center or VDP; lifecycle/ — no versioning or support-period page; conformance/), live probes of the conventional paths on www.sursatech.com, and the six pages the sitemap lists (/, /services, /work, /about, /process, /pricing, /careers) plus llms.txt and robots.txt, 2026-09-19.'
+operator:
+  legal_entity: Sursa Technology Private Limited (trading as SursaTech)
+  registered_office: Maharajgunj, Kathmandu - 03, Bagmati, Nepal, 44600
+  founded: '2017'
+  contact: info@sursatech.com
+  source: https://www.sursatech.com/about and the schema.org ProfessionalService JSON-LD on every page (legalName, PostalAddress addressCountry NP)
+  note: The website publishes NO privacy policy, terms of service, cookie notice, DPA or legal page of any kind — the sitemap has seven entries and none is legal. Regime applicability is decided by the Kin Score regime map, not here; this file records only what the provider publishes, which for every horizontal signal below is nothing.
+probed_paths:
+- url: https://www.sursatech.com/privacy
+  status: 404
+- url: https://www.sursatech.com/terms
+  status: 404
+- url: https://www.sursatech.com/security
+  status: 404
+- url: https://www.sursatech.com/accessibility
+  status: 404
+- url: https://www.sursatech.com/legal/subprocessors
+  status: 404
+- url: https://www.sursatech.com/legal/dpa
+  status: 404
+- url: https://www.sursatech.com/status
+  status: 404
+- url: https://www.sursatech.com/.well-known/security.txt
+  status: 404
+- url: https://api.sursatech.com/.well-known/security.txt
+  status: 404
+- url: https://www.sursatech.com/about
+  status: 200
+  note: legal entity, address, founding year, team — no privacy, DSR, accessibility or data-handling statement
+- url: https://www.sursatech.com/robots.txt
+  status: 200
+  note: 'carries a contentsignals.org declaration "Content-Signal: ai-train=yes, search=yes, ai-input=yes" — an AI-use PERMISSION for the site''s own content, not a transparency disclosure about the provider''s AI system, so it is not recorded as ai_transparency'
+signals: {}
+signals_checked_and_absent:
+- sbom
+- support_lifetime
+- accessibility_conformance
+- training_data_summary
+- ai_transparency
+- global_privacy_control
+- data_subject_request
+- subprocessors
+- data_residency
+- incident_notification
+- age_assurance
+- notice_and_action
+- transparency_report
+- exit_assistance
+ai_system_note: 'The A2A surface IS an AI system (an LLM-backed "AI Advisor" that captures leads, estimates projects and takes bookings/payments), and the card and auth.md disclose that fact plainly and state that user-impacting steps require human verification and payment-provider checks. That is honest product documentation rather than a published AI-transparency notice or model/training disclosure, so no AITransparency pointer is emitted; it is noted here so a later pass does not mistake the absence for oversight.'

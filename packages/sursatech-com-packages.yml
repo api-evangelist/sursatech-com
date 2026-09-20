@@ -1,0 +1,22 @@
+generated: '2026-09-19'
+method: searched
+source: Registry metadata endpoints probed 2026-09-19 (registry.npmjs.org search, pypi.org/pypi/<pkg>/json), the GitHub org https://github.com/sursatech (4 public repos), auth.md, llms.txt and the agent card.
+summary: 'SursaTech ships NO client library, SDK or CLI for its A2A surface on any registry, and its documentation names none: the published developer surface is the agent card, auth.md (curl-style HTTP examples only) and the discovery metadata. The GitHub org (Sursa Technology Pvt. Ltd., Kathmandu, created 2020-01-30) holds four repos unrelated to this API — a Mintlify docs source for a separate product (sursakitdocs, "Humafu Docs", MDX, MIT, pushed 2025-12-29), an Express/Prisma sample (employee-info-api, pushed 2026-04-30), a React sample (employee-info-app, pushed 2026-05-06) and Docker Compose templates (template-builders, pushed 2026-04-30). None is an SDK, so no SDKs pointer is emitted.'
+registries_probed:
+- registry: npm
+  queries:
+  - search?text=sursatech
+  result: 0 results
+- registry: pypi
+  queries:
+  - sursatech
+  - sursatech-a2a
+  result: 404 on every name
+- registry: github
+  queries:
+  - orgs/sursatech
+  - orgs/sursatech/repos
+  result: org exists with 4 public repos; none contains an OpenAPI, .proto, AsyncAPI, WSDL, SDK or MCP package; none references api.sursatech.com
+package_count: 0
+official_sdk_count: 0
+packages: []

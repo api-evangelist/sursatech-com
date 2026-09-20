@@ -1,0 +1,31 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://api.sursatech.com/api/a2a",
+      "service-desc": [
+        {
+          "href": "https://api.sursatech.com/openapi.json",
+          "type": "application/json"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://www.sursatech.com/",
+          "type": "text/html"
+        }
+      ],
+      "status": [
+        {
+          "href": "https://api.sursatech.com/health",
+          "type": "application/json"
+        }
+      ],
+      "https://a2a-protocol.org/rels/agent-card": [
+        {
+          "href": "https://www.sursatech.com/.well-known/agent-card.json",
+          "type": "application/json"
+        }
+      ]
+    }
+  ]
+}

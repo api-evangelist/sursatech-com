@@ -1,0 +1,39 @@
+generated: '2026-09-19'
+method: probed
+status: unverified
+source: 'SEARCHED the agent card, auth.md, llms.txt, the api-catalog linkset, the GitHub org (sursatech — 4 repos, none MCP) and npm/PyPI for an official MCP server: none is advertised or published. PROBED https://api.sursatech.com/api/mcp anonymously on 2026-09-19.'
+summary: 'SursaTech advertises NO MCP server anywhere on its surface. A POST to https://api.sursatech.com/api/mcp is answered with HTTP 401 {"detail":"Missing bearer token"} and the same RFC 9728 WWW-Authenticate challenge the A2A endpoint returns (GET → 405), so a bearer-gated POST route exists at a path that would conventionally host MCP — but initialize and tools/list could not be observed without a credential, and this profile used none. It is therefore recorded as an unverified lead, NOT as a server: no endpoint is asserted, no MCPServer pointer is emitted, and no tool list is derived (there is no OpenAPI to derive one from; the ten A2A skills belong to the A2A surface and are recorded in a2a/).'
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: probed
+  note: 'mode none because nobody ships or documents a server. The bearer-gated route at /api/mcp is NOT written into endpoint: a guessed path that answers 401 is not a verified agent surface, and asserting it would credit the provider with an MCP server it has not announced.'
+probe:
+  - url: https://api.sursatech.com/api/mcp
+    method: GET
+    http_status: 405
+    body: '{"detail":"Method Not Allowed"}'
+  - url: https://api.sursatech.com/api/mcp
+    method: POST JSON-RPC tools/list (anonymous, Accept application/json, text/event-stream)
+    http_status: 401
+    body: '{"detail":"Missing bearer token"}'
+    response_headers:
+      www-authenticate: Bearer realm="SursaTech A2A", resource_metadata="https://api.sursatech.com/.well-known/oauth-protected-resource"
+  - url: https://api.sursatech.com/api/mcp
+    method: POST JSON-RPC initialize (anonymous)
+    http_status: 401
+    body: '{"detail":"Missing bearer token"}'
+  - url: https://api.sursatech.com/mcp
+    http_status: 404
+  - url: https://api.sursatech.com/.well-known/mcp.json
+    http_status: 404
+  - url: https://www.sursatech.com/.well-known/mcp.json
+    http_status: 404
+  - url: https://www.sursatech.com/mcp
+    http_status: 404
+what_would_verify_it: An authenticated POST initialize / tools/list against /api/mcp using a self-registered bearer token (auth.md permits discovery agents to self-register), or a provider statement naming the endpoint. The realm on the challenge is "SursaTech A2A", which suggests the route shares the A2A auth middleware rather than being a separately announced product.
+tools: []
+tool_crosswalk: not applicable — no OpenAPI and no verified MCP tool list

@@ -1,0 +1,37 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+provider: SursaTech
+providerId: sursatech-com
+created: '2026-09-19'
+modified: '2026-09-19'
+generated: '2026-09-19'
+method: searched
+sources:
+- https://api.sursatech.com/auth.md
+- https://api.sursatech.com/api/a2a/register (observed response field rateLimitPerMinute, 2026-09-19)
+description: 'auth.md states that self-registration tokens "are rate-limited per client and per IP" and publishes no numbers. The only figure the provider emits is in the registration response itself: a self-registered client receives rateLimitPerMinute 60. No rate-limit response headers are documented, none were observed on the unauthenticated responses, and the exhaustion status code is not documented (no 429 was provoked — this profile made no authenticated calls).'
+headers:
+  retryAfter: null
+  rateLimitLimit: null
+  rateLimitRemaining: null
+  rateLimitReset: null
+  note: none documented or observed
+responseCodes:
+  throttled: null
+  note: not documented; not observed
+limit_count: 2
+limits:
+- name: Per-client limit for a self-registered agent
+  scope: client (per registered clientId / bearer token)
+  metric: requests_per_minute
+  limit: 60
+  timeFrame: minute
+  method: probed
+  evidence: rateLimitPerMinute 60 in the POST /api/a2a/register response body (2026-09-19); auth.md names the per-client limit without a number
+- name: Per-IP limit
+  scope: ip
+  metric: null
+  limit: null
+  timeFrame: null
+  method: searched
+  evidence: 'auth.md: "rate-limited per client and per IP" — no number, window or header is published'

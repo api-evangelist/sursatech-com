@@ -1,0 +1,101 @@
+generated: '2026-09-19'
+method: searched
+source: https://api.sursatech.com/auth.md, the agent card (a2a/sursatech-com-agent-card.json — skill descriptions carry the guard rails), https://www.sursatech.com/llms.txt, the discovery documents in well-known/, and live anonymous probes of https://api.sursatech.com on 2026-09-19. No OpenAPI exists to derive from.
+description: 'How the SursaTech AI Advisor A2A API behaves: a single JSON-RPC 2.0 endpoint behind an opaque bearer token that any agent can mint anonymously, ten skills of which six mutate (lead capture, booking, payment, confirmation, cancel/reschedule) behind stated human-verification and payment-provider gates, no idempotency contract, no pagination, no versioning scheme, FastAPI/JSON-RPC error envelopes, and per-client + per-IP rate limits that are stated but not signalled in headers.'
+base_url: https://api.sursatech.com/api/a2a
+api_style: A2A 1.0 over JSON-RPC 2.0 (HTTP POST, protocolBinding JSONRPC); streaming declared (capabilities.streaming true); text/plain in, text/plain or application/json out
+protocol_note: 'Only the A2A 1.0 method names are implemented (SendMessage / GetTask reach the auth gate); the 0.3-era message/send and tasks/get return -32601. The card nevertheless carries the 0.3 fields (url, preferredTransport, additionalInterfaces) for older resolvers.'
+authentication:
+  scheme: 'Opaque bearer token — Authorization: Bearer <accessToken>'
+  acquisition: 'Anonymous self-registration: POST /api/a2a/register {"name": "…"} returns the token once; POST /api/a2a/token also mints an a2a-scoped token with no client credential (observed). Partner tokens are minted out-of-band.'
+  scopes: [a2a, company.read, requirements.write, booking.write]
+  default_scope: a2a
+  revocation: none self-service — email info@sursatech.com
+  discovery: RFC 8414 + OIDC metadata on api.sursatech.com and www.sursatech.com; RFC 9728 resource metadata on the endpoint host, echoed in the 401 WWW-Authenticate challenge
+  docs: https://api.sursatech.com/auth.md
+  detail: authentication/sursatech-com-authentication.yml
+  scopes_detail: scopes/sursatech-com-scopes.yml
+idempotency:
+  supported: false
+  coverage: none
+  mechanism: null
+  scope: []
+  note: 'No idempotency key, request id or replay guarantee is documented anywhere on the surface. The write skills are gated by human verification ("Requires user email and selected time before payment", "Confirm the booking only after payment has been verified by the configured provider/webhook", "verification is required before calendar mutation") — these are consent gates, not idempotency, and a retried SendMessage that captures a lead or starts a booking has no documented dedupe.'
+dry_run_mode:
+  supported: false
+  note: No dry-run, preview or sandbox mode is documented. The estimate_project_timeline_and_price skill returns a "tentative" estimate but that is a read, not a rehearsal of a write.
+reversibility:
+  grade: documented
+  write_surface:
+  - skill: capture_lead_requirement
+    effect: persists a structured project requirement for human follow-up
+    reversal: none documented
+    window: null
+  - skill: start_consultation_booking
+    effect: starts or continues a booking (requires user email + selected time before payment)
+    reversal: cancel_or_reschedule_booking
+    window: null
+  - skill: create_payment_checkout
+    effect: creates and returns a consultation payment checkout link
+    reversal: none documented (no refund or void skill; payment "still runs through the normal backend workflow" per auth.md)
+    window: null
+  - skill: confirm_paid_booking
+    effect: confirms the booking after payment is verified by the provider/webhook
+    reversal: cancel_or_reschedule_booking
+    window: null
+  - skill: cancel_or_reschedule_booking
+    effect: starts a guarded cancel/reschedule flow for an existing booking; verification is required before calendar mutation
+    reversal: n/a (this IS the reversal path)
+    window: null
+  reversal_operations:
+  - operationId: cancel_or_reschedule_booking
+    kind: cancel / reschedule
+    applies_to: [start_consultation_booking, confirm_paid_booking]
+    source: a2a/sursatech-com-agent-card.json#skills[cancel_or_reschedule_booking]
+    docs: https://www.sursatech.com/.well-known/agent-card.json
+  window_note: 'The provider publishes NO cancellation, reschedule or refund window anywhere (no terms page — /terms 404; auth.md and the card state only that verification precedes calendar mutation). A reversal path exists for bookings, so the grade is documented (0.4), not verified — no window is asserted because none is stated.'
+  payments_note: No refund/void path is documented for a checkout created by create_payment_checkout; an agent should treat payment as irreversible from this surface.
+pagination:
+  supported: false
+  note: Conversational skills return knowledge or start flows; no list operation, cursor or page parameter is documented.
+field_expansion:
+  supported: false
+sparse_fields:
+  supported: false
+metadata:
+  supported: false
+request_tracing:
+  request_id_header: null
+  note: No request-id header is documented or observed; responses carry no tracing header beyond the standard security headers (CSP default-src none, X-Frame-Options DENY, Referrer-Policy no-referrer, HSTS).
+versioning:
+  scheme: none published
+  current: card version 1.0.0; protocolVersion "1.0"
+  header: null
+  note: No API versioning, changelog or deprecation policy is published (lifecycle/sursatech-com-lifecycle.yml).
+error_envelope:
+  media_type: application/json
+  rfc9457: false
+  shapes:
+  - layer: HTTP / framework (FastAPI)
+    shape: '{"detail": "<prose>"}'
+    observed: [401 Missing bearer token, 404 Not Found, 405 Method Not Allowed]
+  - layer: JSON-RPC 2.0
+    shape: '{"jsonrpc":"2.0","id":<id>,"error":{"code":<int>,"message":"<prose>"}}'
+    observed: [-32601 Method not found (HTTP 200)]
+  auth_challenge: 'WWW-Authenticate: Bearer realm="SursaTech A2A", resource_metadata="https://api.sursatech.com/.well-known/oauth-protected-resource"'
+  detail: errors/sursatech-com-problem-types.yml
+rate_limiting:
+  documented: 'auth.md: "Current self-registration tokens receive the A2A agent scope and are rate-limited per client and per IP."'
+  observed: the registration response carries rateLimitPerMinute 60 for a self-registered client
+  headers: none documented or observed
+  exhaustion_status: not observed
+  detail: rate-limits/sursatech-com-rate-limits.yml
+human_in_the_loop:
+  note: 'The card and auth.md state repeatedly that user-impacting steps require normal verification and payment-provider checks; llms.txt goes further: "Booking, payment, and calendar flows require human consent and live behind the website chat" — i.e. the provider positions the A2A surface as read-mostly for third-party agents even though the six write skills are listed on the card.'
+cross_links:
+  authentication: authentication/sursatech-com-authentication.yml
+  scopes: scopes/sursatech-com-scopes.yml
+  errors: errors/sursatech-com-problem-types.yml
+  lifecycle: lifecycle/sursatech-com-lifecycle.yml
+  rate_limits: rate-limits/sursatech-com-rate-limits.yml
+  agent_card: a2a/sursatech-com-a2a.yml

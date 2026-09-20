@@ -1,0 +1,51 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+provider: SursaTech
+providerId: sursatech-com
+created: '2026-09-19'
+modified: '2026-09-19'
+generated: '2026-09-19'
+method: searched
+sources:
+- https://www.sursatech.com/pricing
+- https://api.sursatech.com/auth.md
+- https://www.sursatech.com/llms.txt
+description: 'SursaTech publishes no API pricing: the A2A surface has a single access model — anonymous self-registration for a bearer token at no charge, rate-limited per client (60/min observed) and per IP, with the a2a scope; partner tokens with wider scopes are "minted out-of-band". The /pricing page prices the company''s consulting ENGAGEMENTS, not the API: "SursaTech does not publish fixed rates. Engagements fall into three shapes" — Spike (1 to 4 weeks), Build (3 to 6 months, monthly retainer, weekly demos) and Operate (6+ months, monthly retainer) — and says the fastest path to a firm number is a paid consultation booked through the advisor. No prices, currency or quotas are stated for any of the three.'
+currency: null
+plan_count: 1
+plans:
+- id: self-registered-agent
+  name: Anonymous self-registered agent (A2A)
+  type: free
+  price: 0
+  currency: null
+  billing_period: null
+  description: 'Any agent may POST {"name": "…"} to /api/a2a/register and receive an opaque bearer token with the a2a scope. No card, no account, no approval.'
+  included:
+    scope: a2a
+    rate_limit: 60 requests/minute per client (observed rateLimitPerMinute), plus an unstated per-IP limit
+  limits_detail: rate-limits/sursatech-com-rate-limits.yml
+  signup: https://api.sursatech.com/auth.md
+- id: partner
+  name: Known partner (out-of-band token)
+  type: contact
+  price: null
+  description: 'Tokens "minted out-of-band for known partners" (agent card securitySchemes.bearerAuth). No published terms, price or onboarding path; presumably the route to the company.read / requirements.write / booking.write scopes.'
+  signup: mailto:info@sursatech.com
+services_pricing_context:
+  url: https://www.sursatech.com/pricing
+  verbatim: SursaTech does not publish fixed rates. Engagements fall into three shapes.
+  engagement_shapes:
+  - name: Spike
+    duration: 1 to 4 weeks
+    description: A scoped audit, prototype, or feasibility check.
+    price: not published
+  - name: Build
+    duration: 3 to 6 months
+    description: A full SaaS product engineering engagement, from discovery to first production release. Delivered on a monthly retainer with weekly demos.
+    price: not published
+  - name: Operate
+    duration: 6+ months
+    description: Ongoing build and iteration after the first release. Monthly retainer, scoped product outcomes, weekly demos.
+    price: not published
+  note: Consulting services pricing, recorded for context; these are not API plans and are not counted in plan_count beyond the two access models above. The paid consultation itself (the create_payment_checkout skill) has no published price.

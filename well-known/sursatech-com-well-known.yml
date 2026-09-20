@@ -1,0 +1,188 @@
+generated: '2026-09-19'
+method: probed
+source: Live GET probes of the closed /.well-known path list on sursatech.com, www.sursatech.com, api.sursatech.com (the A2A endpoint host, OAuth issuer and resource server) and analytics.apps.sursatech.com (the only other first-party host the site references), 2026-09-19. Every row is a request that was issued; every status is the one returned.
+summary:
+  hosts_probed: 4
+  paths_probed: 60
+  documents_served: 12
+  hit_count: 8
+  note: 'SursaTech serves a complete agent-discovery surface across two hosts. www.sursatech.com (the website) serves the A2A agent card, OIDC discovery, RFC 8414 authorization-server metadata, RFC 9728 protected-resource metadata (resource = the website origin), an RFC 9727 api-catalog linkset, a JWKS and an agentskills.io skill index. api.sursatech.com (the A2A endpoint) serves the same card byte-for-byte, its own OIDC/RFC 8414 metadata (identical content, minified), its own RFC 9728 document (resource = https://api.sursatech.com/api/a2a — the correct RFC 9728 placement on the resource server) and a JWKS. The apex sursatech.com 308-redirects every path to www and serves nothing of its own. analytics.apps.sursatech.com 404s everything. No security.txt on any host (neither /.well-known nor root), no apis.json, no ai-plugin.json, no ucp/acp/aauth, no mcp.json. Two weaknesses worth recording: the api-catalog''s service-desc link (https://api.sursatech.com/openapi.json) 404s — the catalog advertises an OpenAPI that is not served — and both JWKS documents are empty ({"keys":[]}), consistent with the card''s opaque bearer tokens but meaning nothing can be verified offline.'
+  auth_model_note: 'The OAuth metadata describes an ANONYMOUS dynamic-registration model rather than an interactive OAuth flow: grant_types_supported [client_credentials], token_endpoint_auth_methods_supported [none], response_types_supported [none], authorization_endpoint pointing at a markdown document (auth.md) rather than an authorization UI, and a non-standard agent_auth block (identity_types_supported [anonymous], register_uri / claim_uri = /api/a2a/register). See authentication/ and scopes/.'
+  mcp_host_note: 'The provider advertises no MCP server anywhere (card, llms.txt, auth.md, api-catalog). A POST to https://api.sursatech.com/api/mcp answers 401 with the same WWW-Authenticate: Bearer … resource_metadata challenge as /api/a2a (GET 405), so a bearer-gated route exists at that path, but whether it speaks MCP could not be established without credentials — see mcp/. The api.sursatech.com rows above therefore already cover the only candidate MCP host.'
+path_echo_control: passed
+negative_control:
+  path: /.well-known/sursatech-negative-control-9f1c2e.json
+  status: 404
+  hosts:
+  - www.sursatech.com
+  - api.sursatech.com
+hosts:
+- host: sursatech.com
+  role: Apex — 308 permanent redirect to https://www.sursatech.com/ for every path; serves nothing of its own
+  documents:
+  - path: /.well-known/security.txt
+    status: 308
+    note: redirect to www.sursatech.com (404 there)
+  - path: /.well-known/openid-configuration
+    status: 308
+    note: redirect to www.sursatech.com (200 there)
+  - path: /.well-known/oauth-authorization-server
+    status: 308
+    note: redirect to www.sursatech.com (200 there)
+  - path: /.well-known/oauth-protected-resource
+    status: 308
+    note: redirect to www.sursatech.com (200 there)
+  - path: /.well-known/api-catalog
+    status: 308
+    note: redirect to www.sursatech.com (200 there)
+  - path: /.well-known/ai-plugin.json
+    status: 308
+    note: redirect to www.sursatech.com (404 there)
+  - path: /.well-known/mcp.json
+    status: 308
+  - path: /.well-known/agent-card.json
+    status: 308
+    note: redirect to www.sursatech.com (200 there)
+  - path: /.well-known/agent.json
+    status: 308
+    note: redirect to www.sursatech.com (404 there)
+- host: www.sursatech.com
+  role: Website (Next.js) — the canonical host; serves the agent card, OAuth/OIDC discovery, api-catalog, JWKS and the agent-skills index; llms.txt and sitemap.xml at the root
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    note: Next.js not-found page (text/html, 15,652 bytes) — a real 404, not a catch-all 200. /security.txt at the root also 404.
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: sursatech-com-www-openid-configuration.json
+    note: 'issuer https://api.sursatech.com; identical content to the api host copy (pretty-printed here, key order differs). id_token_signing_alg_values_supported and claims_supported are empty arrays and response_types_supported is ["none"] — an OIDC-shaped document for a service that issues no ID tokens.'
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: sursatech-com-www-oauth-authorization-server.json
+    note: RFC 8414 metadata; issuer https://api.sursatech.com; grant_types [client_credentials]; token_endpoint_auth_methods [none]; registration_endpoint https://api.sursatech.com/api/a2a/register; scopes_supported [a2a, company.read, requirements.write, booking.write]; non-standard agent_auth block.
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: sursatech-com-www-oauth-protected-resource.json
+    note: RFC 9728; resource https://www.sursatech.com; authorization_servers [https://api.sursatech.com]; bearer_methods_supported [header]; resource_documentation https://api.sursatech.com/auth.md.
+  - path: /.well-known/api-catalog
+    status: 200
+    file: sursatech-com-api-catalog.json
+    note: 'RFC 9727 linkset (served as application/json, not application/linkset+json); one anchor https://api.sursatech.com/api/a2a with service-desc https://api.sursatech.com/openapi.json (DEAD — 404 {"detail":"Not Found"} on 2026-09-19), service-doc https://www.sursatech.com/, status https://api.sursatech.com/health (200) and the A2A agent-card relation.'
+  - path: /.well-known/api-catalog.json
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    note: Next.js not-found page
+  - path: /.well-known/ucp.json
+    status: 404
+  - path: /.well-known/acp.json
+    status: 404
+  - path: /.well-known/aauth-resource.json
+    status: 404
+  - path: /.well-known/apis.json
+    status: 404
+  - path: /apis.json
+    status: 404
+  - path: /apis.yml
+    status: 404
+  - path: /.well-known/mcp.json
+    status: 404
+  - path: /.well-known/jwks.json
+    status: 200
+    file: sursatech-com-jwks.json
+    note: '{"keys":[]} — an empty key set (the www copy is pretty-printed, 17 bytes; the api copy is 11 bytes; same content).'
+  - path: /.well-known/agent-card.json
+    status: 200
+    file: ../a2a/sursatech-com-agent-card.json
+    note: A2A agent card, 6,127 bytes — see a2a/sursatech-com-a2a.yml
+  - path: /.well-known/agent.json
+    status: 404
+    note: legacy pre-0.3 path not served
+  - path: /.well-known/agent-skills/index.json
+    status: 200
+    file: sursatech-com-agent-skills-index.json
+    note: agentskills.io index schema v0.2.0, four skills — see skills/
+  - path: /llms.txt
+    status: 200
+    file: ../llms/sursatech-com-llms.txt
+    note: text/markdown, 3,089 bytes; names the agent card, auth.md, protected-resource metadata and skill index under "For AI agents"
+  - path: /auth.md
+    status: 200
+    note: 'a re-wrapped copy of https://api.sursatech.com/auth.md (same content; the www copy points at the www protected-resource URL, the api copy at the api one). Saved from the api host at authentication/sursatech-com-auth.md.'
+- host: api.sursatech.com
+  role: A2A endpoint host (FastAPI/uvicorn), OAuth issuer, RFC 9728 resource server; every unknown path is a JSON 404 {"detail":"Not Found"}
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    note: '{"detail":"Not Found"} — a real 404. /security.txt at the root also 404.'
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: sursatech-com-openid-configuration.json
+    note: issuer https://api.sursatech.com (self); minified; same content as the www copy
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: sursatech-com-oauth-authorization-server.json
+    note: RFC 8414 metadata on the issuer host itself
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: sursatech-com-oauth-protected-resource.json
+    note: 'RFC 9728; resource https://api.sursatech.com/api/a2a — the resource server''s own metadata, and the URL the endpoint''s 401 WWW-Authenticate challenge names as resource_metadata (observed on POST /api/a2a and POST /api/mcp).'
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/api-catalog.json
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/ucp.json
+    status: 404
+  - path: /.well-known/acp.json
+    status: 404
+  - path: /.well-known/aauth-resource.json
+    status: 404
+  - path: /.well-known/apis.json
+    status: 404
+  - path: /apis.json
+    status: 404
+  - path: /apis.yml
+    status: 404
+  - path: /.well-known/mcp.json
+    status: 404
+  - path: /.well-known/jwks.json
+    status: 200
+    file: sursatech-com-jwks.json
+    note: '{"keys":[]}'
+  - path: /.well-known/agent-card.json
+    status: 200
+    file: ../a2a/sursatech-com-agent-card.json
+    note: byte-identical to the www copy
+  - path: /.well-known/agent.json
+    status: 404
+  - path: /.well-known/agent-skills/index.json
+    status: 404
+  - path: /openapi.json
+    status: 404
+    note: 'the api-catalog''s service-desc target; {"detail":"Not Found"}. Also 404: /openapi.yaml, /swagger.json, /v1/openapi.json, /api/openapi.json, /api-docs, /docs, /redoc, /api/docs, /llms.txt, /graphql, /api/graphql, /mcp.'
+  - path: /health
+    status: 200
+    note: '{"status":"ok","environment":"Production"} — the api-catalog status link'
+  - path: /auth.md
+    status: 200
+    note: 'text/markdown, 2,086 bytes — the human-readable registration + credential guide named as authorization_endpoint / service_documentation / resource_documentation. Saved at authentication/sursatech-com-auth.md.'
+- host: analytics.apps.sursatech.com
+  role: First-party analytics script host referenced by the website (script.js); not an API host
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    note: text/html not-found page, 11,327 bytes, for every path probed
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/mcp.json
+    status: 404

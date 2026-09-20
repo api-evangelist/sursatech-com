@@ -1,0 +1,47 @@
+generated: '2026-09-19'
+method: searched
+source: https://api.sursatech.com/.well-known/oauth-authorization-server (scopes_supported), https://api.sursatech.com/.well-known/oauth-protected-resource (scopes_supported), https://api.sursatech.com/auth.md ("Credential Use"), and the observed token response on 2026-09-19.
+docs: https://api.sursatech.com/auth.md
+openapi_note: No OpenAPI is served, so derive-oauth-scopes.py found nothing to derive; every scope below is the provider's own published list.
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  bearerFormat: opaque
+  source: a2a/sursatech-com-agent-card.json
+  issuer: https://api.sursatech.com
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://api.sursatech.com/api/a2a/token
+    registrationUrl: https://api.sursatech.com/api/a2a/register
+    client_authentication: none (anonymous registration; token_endpoint_auth_methods_supported ["none"])
+scope_count: 4
+scopes:
+- scope: a2a
+  description: The A2A agent scope. The scope every anonymous self-registration token receives (auth.md); the token endpoint's observed response carries scope "a2a".
+  granted_to: anonymous self-registered agents
+  flows: [clientCredentials]
+  sources:
+  - https://api.sursatech.com/.well-known/oauth-authorization-server
+  - https://api.sursatech.com/auth.md
+- scope: company.read
+  description: Read company knowledge (profile, services, portfolio, process, pricing). Listed in scopes_supported; the provider publishes no per-scope description, so this reading is inferred from the scope name and the read skills on the agent card.
+  description_published: false
+  flows: [clientCredentials]
+  sources:
+  - https://api.sursatech.com/.well-known/oauth-authorization-server
+- scope: requirements.write
+  description: Persist a structured project requirement (the capture_lead_requirement skill). Listed in scopes_supported; no per-scope description is published — inferred from the name.
+  description_published: false
+  flows: [clientCredentials]
+  sources:
+  - https://api.sursatech.com/.well-known/oauth-authorization-server
+- scope: booking.write
+  description: Consultation booking, payment checkout, confirmation and cancel/reschedule (the four guarded booking skills). Listed in scopes_supported; no per-scope description is published — inferred from the name.
+  description_published: false
+  flows: [clientCredentials]
+  sources:
+  - https://api.sursatech.com/.well-known/oauth-authorization-server
+notes:
+- The provider publishes the scope NAMES but no scope reference page: auth.md lists them in one line and says only that self-registration tokens receive the A2A agent scope. Which skills require which of the other three scopes, and how a partner obtains them ("minted out-of-band for known partners"), is not documented.
+- No scope is requested in the observed anonymous token exchange; the default is a2a.

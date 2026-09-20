@@ -1,18 +1,85 @@
 aid: sursatech-com
 name: SursaTech
-description: 'SursaTech is a company surfaced via the API Evangelist harvest backlog (source: a2a-registry)
-  and added to the network as a stub for full-pipeline profiling.'
+description: 'SursaTech (Sursa Technology Private Limited) is an AI-native product engineering and consulting company
+  founded in 2017 in Kathmandu, Nepal, building production AI agents, RAG and knowledge systems, AI-enabled SaaS
+  products, automation and integrations, and QA leadership for clients in Nepal, Japan, Norway, the United States and
+  the United Kingdom, and operating its own products (Humafu, AcademyKit, Buy Me a Momo). Its public machine surface
+  is an A2A 1.0 agent — the SursaTech AI Advisor — served as a conformant agent card at
+  /.well-known/agent-card.json with a JSON-RPC endpoint at api.sursatech.com/api/a2a: ten skills covering company
+  knowledge (profile, services, portfolio, process, pricing), lead-requirement capture, tentative project estimates
+  and guarded consultation booking, payment and cancel/reschedule flows. Any agent can self-register anonymously for
+  an opaque bearer token; the provider publishes RFC 8414/OIDC authorization-server metadata, RFC 9728
+  protected-resource metadata, an RFC 9727 api-catalog, an agentskills.io skill index and an llms.txt, but no
+  OpenAPI, SDK, MCP server, status page, pricing for the API, or legal pages.'
+image: https://www.sursatech.com/brand/apple-icon.png
 url: https://raw.githubusercontent.com/api-evangelist/sursatech-com/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:a2a-registry
-x-tier: stub
+x-tier: enriched
 x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-09-19'
 modified: '2026-09-19'
 tags:
+- AI Agents
+- A2A
+- Agent-to-Agent
+- AI Consulting
+- Product Engineering
+- Software Development
+- RAG
+- QA Automation
+- Nepal
+- agent-native
 - Company
-apis: []
+apis:
+- aid: sursatech-com:sursatech-ai-advisor-a2a-api
+  name: SursaTech AI Advisor A2A API
+  description: 'An A2A 1.0 agent (JSON-RPC 2.0 over HTTP POST, streaming declared) exposing ten skills: get_company_profile,
+    get_services, get_portfolio_projects, get_development_process, estimate_project_timeline_and_price,
+    capture_lead_requirement, start_consultation_booking, create_payment_checkout, confirm_paid_booking and
+    cancel_or_reschedule_booking. Authentication is an opaque bearer token any agent can mint anonymously at
+    POST /api/a2a/register (or /api/a2a/token) with the a2a scope, rate-limited per client (60/min observed) and per IP;
+    company.read, requirements.write and booking.write scopes are published but only issued out-of-band to partners.
+    Only the A2A 1.0 method names (SendMessage, GetTask) are implemented; the 0.3-era message/send family returns -32601.
+    No OpenAPI is served — the api-catalog advertises one at /openapi.json that 404s — so the agent card is the contract.'
+  image: https://www.sursatech.com/brand/apple-icon.png
+  humanURL: https://api.sursatech.com/auth.md
+  baseURL: https://api.sursatech.com/api/a2a
+  tags:
+  - A2A
+  - AI Agents
+  - Agent-to-Agent
+  - AI Consulting
+  - Booking
+  properties:
+  - type: AgentCard
+    url: a2a/sursatech-com-a2a.yml
+  - type: AgentCard
+    url: https://www.sursatech.com/.well-known/agent-card.json
+    name: Provider-served A2A agent card (protocolVersion 1.0; byte-identical copy on api.sursatech.com)
+  - type: Documentation
+    url: https://api.sursatech.com/auth.md
+    name: auth.md — agent registration, credential use, scopes and revocation
+  - type: Authentication
+    url: authentication/sursatech-com-authentication.yml
+  - type: OAuthScopes
+    url: scopes/sursatech-com-scopes.yml
+  - type: OAuthAuthorizationServer
+    url: https://api.sursatech.com/.well-known/oauth-authorization-server
+    name: RFC 8414 authorization-server metadata (issuer api.sursatech.com; anonymous client_credentials + registration_endpoint)
+  - type: OAuthProtectedResource
+    url: https://api.sursatech.com/.well-known/oauth-protected-resource
+    name: RFC 9728 protected-resource metadata for the A2A endpoint
+  - type: ErrorCatalog
+    url: errors/sursatech-com-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/sursatech-com-rate-limits.yml
+  - type: Conventions
+    url: conventions/sursatech-com-conventions.yml
+  - type: HealthCheck
+    url: https://api.sursatech.com/health
+    name: Liveness endpoint named as the status relation in the api-catalog linkset
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -20,4 +87,67 @@ maintainers:
   email: info@apis.io
 common:
 - type: Website
-  url: https://sursatech.com/
+  url: https://www.sursatech.com/
+- type: About
+  url: https://www.sursatech.com/about
+- type: Pricing
+  url: https://www.sursatech.com/pricing
+  name: Engagement pricing (consulting shapes; no API pricing — see plans/)
+- type: Documentation
+  url: https://api.sursatech.com/auth.md
+- type: GitHubOrganization
+  url: https://github.com/sursatech
+- type: LinkedIn
+  url: https://www.linkedin.com/company/sursatech
+- type: Sitemap
+  url: https://www.sursatech.com/sitemap.xml
+- type: LLMsTxt
+  url: llms/sursatech-com-llms.txt
+- type: LLMsTxt
+  url: https://www.sursatech.com/llms.txt
+  name: Provider-served llms.txt
+- type: AgentCard
+  url: a2a/sursatech-com-a2a.yml
+- type: WellKnown
+  url: well-known/sursatech-com-well-known.yml
+- type: OpenIDConnect
+  url: well-known/sursatech-com-openid-configuration.json
+  name: OIDC discovery document served on api.sursatech.com (response_types none — discovery only, no ID tokens)
+- type: OAuthAuthorizationServer
+  url: well-known/sursatech-com-oauth-authorization-server.json
+- type: OAuthProtectedResource
+  url: well-known/sursatech-com-oauth-protected-resource.json
+- type: APICatalog
+  url: well-known/sursatech-com-api-catalog.json
+  name: RFC 9727 api-catalog linkset served on www.sursatech.com (its service-desc link to /openapi.json is dead)
+- type: AgentSkill
+  url: skills/_index.yml
+  name: Provider-published agentskills.io skill index (4 entries; index only — no skill bodies, sha256 pending)
+- type: Authentication
+  url: authentication/sursatech-com-authentication.yml
+- type: OAuthScopes
+  url: scopes/sursatech-com-scopes.yml
+- type: Conformance
+  url: conformance/sursatech-com-conformance.yml
+- type: Conventions
+  url: conventions/sursatech-com-conventions.yml
+- type: ErrorCatalog
+  url: errors/sursatech-com-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/sursatech-com-lifecycle.yml
+- type: RateLimits
+  url: rate-limits/sursatech-com-rate-limits.yml
+- type: Plans
+  url: plans/sursatech-com-plans-pricing.yml
+- type: Packages
+  url: packages/sursatech-com-packages.yml
+  name: Registry + GitHub sweep — no SDK or client library exists (no SDKs pointer)
+- type: RegulatoryPosture
+  url: regulatory/sursatech-com-regulatory-posture.yml
+- type: DomainSecurity
+  url: security/sursatech-com-domain-security.yml
+x-enrichment:
+  date: '2026-09-19'
+  status: enriched
+  artifacts_added: 28
+  pass: local-v3

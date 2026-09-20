@@ -1,0 +1,36 @@
+generated: '2026-09-19'
+method: searched
+source: https://api.sursatech.com/auth.md, the agent card, https://www.sursatech.com/llms.txt, the RFC 9727 api-catalog status link, GET https://api.sursatech.com/health, and host/path probes for a status page, changelog, terms and versioning docs on 2026-09-19.
+versioning:
+  scheme: none published
+  current: agent card version 1.0.0; A2A protocolVersion "1.0"
+  mechanism: null
+  docs: null
+  note: 'The only version signals are the card''s own version field and protocolVersion; the endpoint path (/api/a2a) is unversioned and no versioning policy, changelog or release notes page exists (/changelog, /docs/changelog 404 on both hosts; the GitHub org holds no repo for this service).'
+deprecation:
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  sunset_dates_published: false
+  posture: 'None published. The card retains 0.3-era fields alongside the 1.0 shape and the endpoint rejects the 0.3 method names with -32601, which is a de-facto cut-over with no stated deprecation window.'
+deprecated_operations: []
+sla:
+  url: null
+  uptime_target: null
+  notes: 'No SLA, terms of service or status commitment is published (/terms, /status 404; no legal pages on the site). auth.md names a "Revocation" contact (info@sursatech.com) but no support SLA. The company''s own process page promises weekly demos for consulting clients — not an API SLA.'
+status_page: null
+status_page_probe:
+- url: https://www.sursatech.com/status
+  status: 404
+- url: https://api.sursatech.com/health
+  status: 200
+  body: '{"status":"ok","environment":"Production"}'
+  note: 'A machine health endpoint, advertised as the "status" relation in the RFC 9727 api-catalog linkset — a liveness check, not a status page with incident history, so no StatusPage pointer is emitted.'
+health_endpoint:
+  url: https://api.sursatech.com/health
+  observed: '{"status":"ok","environment":"Production"}'
+  source: https://www.sursatech.com/.well-known/api-catalog (linkset status relation)
+changelog: null
+support:
+  contact: info@sursatech.com
+  note: the only published support channel (auth.md Revocation section; site footer)

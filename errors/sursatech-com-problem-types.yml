@@ -1,0 +1,59 @@
+generated: '2026-09-19'
+method: probed
+format: flat-json
+source: 'Observed on anonymous requests to https://api.sursatech.com on 2026-09-19 (there is no OpenAPI to derive from and no error reference page). Two envelopes coexist: the FastAPI HTTP layer returns {"detail": …}; the JSON-RPC 2.0 dispatcher returns a JSON-RPC error object with HTTP 200. Application-level A2A errors (task not found, unsupported operation, etc.) require an authenticated call and were not observed.'
+envelope:
+  media_type: application/json
+  rfc9457: false
+  shapes:
+  - layer: http
+    shape: '{"detail": "<prose>"}'
+    note: FastAPI default; no code field, no type URI, no request id
+  - layer: json-rpc
+    shape: '{"jsonrpc": "2.0", "id": <id>, "error": {"code": <int>, "message": "<prose>"}}'
+    note: HTTP status is 200 for JSON-RPC-level errors; switch on error.code
+observed:
+  POST /api/a2a (anonymous, method SendMessage or GetTask):
+    status: 401
+    body: '{"detail":"Missing bearer token"}'
+    headers:
+      www-authenticate: Bearer realm="SursaTech A2A", resource_metadata="https://api.sursatech.com/.well-known/oauth-protected-resource"
+  POST /api/a2a (anonymous, method message/send, tasks/get, message/stream or agent/getAuthenticatedExtendedCard):
+    status: 200
+    body: '{"jsonrpc":"2.0","id":1,"error":{"code":-32601,"message":"Method not found"}}'
+    note: 0.3-era method names are not registered; dispatch happens before the auth check for unknown methods
+  GET /api/a2a, GET /api/a2a/register, GET /api/a2a/token, GET /api/mcp:
+    status: 405
+    body: '{"detail":"Method Not Allowed"}'
+  GET /openapi.json, /docs, /llms.txt, any unknown path:
+    status: 404
+    body: '{"detail":"Not Found"}'
+  POST /api/mcp (anonymous JSON-RPC):
+    status: 401
+    body: '{"detail":"Missing bearer token"}'
+problems:
+- status: 401
+  layer: http
+  title: Missing bearer token
+  detail: '{"detail":"Missing bearer token"}'
+  remediation: 'Register anonymously (POST /api/a2a/register) or mint a token (POST /api/a2a/token) and send Authorization: Bearer <accessToken>. Follow the resource_metadata URL in WWW-Authenticate for the authorization server.'
+- status: 404
+  layer: http
+  title: Not Found
+  detail: '{"detail":"Not Found"}'
+  remediation: Only /api/a2a, /api/a2a/register, /api/a2a/token, /health, /auth.md and the /.well-known documents are served on api.sursatech.com.
+- status: 405
+  layer: http
+  title: Method Not Allowed
+  detail: '{"detail":"Method Not Allowed"}'
+  remediation: The A2A endpoint and the registration/token endpoints accept POST only.
+- status: 200
+  layer: json-rpc
+  code: -32601
+  title: Method not found
+  detail: '{"jsonrpc":"2.0","id":1,"error":{"code":-32601,"message":"Method not found"}}'
+  remediation: Use the A2A 1.0 method names (SendMessage, GetTask, …); the 0.3-era message/send family is not implemented.
+not_observed:
+- JSON-RPC -32600 / -32602 / -32700 (invalid request / params / parse) — require an authenticated call to reach the dispatcher's validation
+- A2A application errors (-32001 TaskNotFound and siblings)
+- 403 (wrong scope), 429 (rate limit) — auth.md states per-client and per-IP limits but the exhaustion response is undocumented

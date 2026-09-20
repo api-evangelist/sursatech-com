@@ -1,0 +1,7 @@
+{
+  "resource": "https://www.sursatech.com",
+  "authorization_servers": ["https://api.sursatech.com"],
+  "scopes_supported": ["a2a", "company.read", "requirements.write", "booking.write"],
+  "bearer_methods_supported": ["header"],
+  "resource_documentation": "https://api.sursatech.com/auth.md"
+}

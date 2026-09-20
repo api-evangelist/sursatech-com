@@ -1,0 +1,233 @@
+{
+  "name": "SursaTech AI Advisor",
+  "version": "1.0.0",
+  "provider": {
+    "url": "https://www.sursatech.com",
+    "organization": "SursaTech"
+  },
+  "description": "SursaTech AI Advisor for an AI-native product engineering company in Kathmandu, Nepal, founded in 2017. Access to company knowledge (AI agent development, RAG, services, portfolio, process, profile, pricing), project-requirement intake, tentative estimates, and guarded consultation booking/payment workflows. Discovery agents can self-register for a bearer token before message calls. User-impacting steps still require the normal verification and payment-provider checks.",
+  "supportedInterfaces": [
+    {
+      "url": "https://api.sursatech.com/api/a2a",
+      "protocolBinding": "JSONRPC",
+      "protocolVersion": "1.0"
+    }
+  ],
+  "capabilities": {
+    "streaming": true
+  },
+  "securitySchemes": {
+    "bearerAuth": {
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "opaque",
+      "description": "Opaque bearer token returned by /api/a2a/register or /api/a2a/token, or minted out-of-band for known partners."
+    }
+  },
+  "securityRequirements": [
+    {
+      "schemes": {
+        "bearerAuth": {}
+      }
+    }
+  ],
+  "defaultInputModes": [
+    "text/plain"
+  ],
+  "defaultOutputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "skills": [
+    {
+      "id": "get_company_profile",
+      "name": "Get company profile",
+      "description": "Return SursaTech's AI-native company overview, founding year, location, and contact details.",
+      "tags": [
+        "company",
+        "profile",
+        "ai-company",
+        "contact"
+      ],
+      "inputModes": [
+        "text/plain"
+      ],
+      "outputModes": [
+        "text/plain",
+        "application/json"
+      ]
+    },
+    {
+      "id": "get_services",
+      "name": "Get services",
+      "description": "List SursaTech's AI agent development, RAG, AI-native product engineering, automation, and QA offerings.",
+      "tags": [
+        "services",
+        "ai-agent-development",
+        "rag",
+        "ai-product-engineering",
+        "qa-automation"
+      ],
+      "inputModes": [
+        "text/plain"
+      ],
+      "outputModes": [
+        "text/plain",
+        "application/json"
+      ]
+    },
+    {
+      "id": "get_portfolio_projects",
+      "name": "Get portfolio",
+      "description": "List representative SursaTech client projects and case studies.",
+      "tags": [
+        "portfolio",
+        "case-studies",
+        "projects"
+      ],
+      "inputModes": [
+        "text/plain"
+      ],
+      "outputModes": [
+        "text/plain",
+        "application/json"
+      ]
+    },
+    {
+      "id": "get_development_process",
+      "name": "Get development process",
+      "description": "Describe how SursaTech runs discovery, build, and operations phases.",
+      "tags": [
+        "process",
+        "delivery",
+        "consulting"
+      ],
+      "inputModes": [
+        "text/plain"
+      ],
+      "outputModes": [
+        "text/plain",
+        "application/json"
+      ]
+    },
+    {
+      "id": "capture_lead_requirement",
+      "name": "Capture lead requirement",
+      "description": "Persist a structured project requirement from an inbound agent for human follow-up.",
+      "tags": [
+        "requirements",
+        "lead-capture",
+        "handoff"
+      ],
+      "inputModes": [
+        "text/plain"
+      ],
+      "outputModes": [
+        "text/plain",
+        "application/json"
+      ]
+    },
+    {
+      "id": "estimate_project_timeline_and_price",
+      "name": "Estimate project",
+      "description": "Return a tentative timeline and price band for a described project scope.",
+      "tags": [
+        "estimate",
+        "timeline",
+        "pricing"
+      ],
+      "inputModes": [
+        "text/plain"
+      ],
+      "outputModes": [
+        "text/plain",
+        "application/json"
+      ]
+    },
+    {
+      "id": "start_consultation_booking",
+      "name": "Start consultation booking",
+      "description": "Start or continue a guarded consultation booking flow. Requires user email and selected time before payment.",
+      "tags": [
+        "booking",
+        "consultation",
+        "calendar"
+      ],
+      "inputModes": [
+        "text/plain"
+      ],
+      "outputModes": [
+        "text/plain",
+        "application/json"
+      ]
+    },
+    {
+      "id": "create_payment_checkout",
+      "name": "Create payment checkout",
+      "description": "Create and return a consultation payment checkout link once booking details are collected.",
+      "tags": [
+        "payment",
+        "checkout",
+        "booking"
+      ],
+      "inputModes": [
+        "text/plain"
+      ],
+      "outputModes": [
+        "text/plain",
+        "application/json"
+      ]
+    },
+    {
+      "id": "confirm_paid_booking",
+      "name": "Confirm paid booking",
+      "description": "Confirm the booking only after payment has been verified by the configured provider/webhook.",
+      "tags": [
+        "payment",
+        "verification",
+        "calendar"
+      ],
+      "inputModes": [
+        "text/plain"
+      ],
+      "outputModes": [
+        "text/plain",
+        "application/json"
+      ]
+    },
+    {
+      "id": "cancel_or_reschedule_booking",
+      "name": "Cancel or reschedule booking",
+      "description": "Start guarded cancel/reschedule flows for an existing booking; verification is required before calendar mutation.",
+      "tags": [
+        "booking",
+        "reschedule",
+        "cancel"
+      ],
+      "inputModes": [
+        "text/plain"
+      ],
+      "outputModes": [
+        "text/plain",
+        "application/json"
+      ]
+    }
+  ],
+  "protocolVersion": "1.0",
+  "url": "https://api.sursatech.com/api/a2a",
+  "preferredTransport": "JSONRPC",
+  "additionalInterfaces": [
+    {
+      "url": "https://api.sursatech.com/api/a2a",
+      "transport": "JSONRPC",
+      "protocolVersion": "1.0"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "x-sursatech-registrationUrl": "https://api.sursatech.com/api/a2a/register",
+  "x-sursatech-tokenUrl": "https://api.sursatech.com/api/a2a/token"
+}

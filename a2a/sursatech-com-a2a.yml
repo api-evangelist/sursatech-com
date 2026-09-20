@@ -1,0 +1,160 @@
+generated: '2026-09-19'
+method: probed
+source: https://www.sursatech.com/.well-known/agent-card.json
+card:
+  file: a2a/sursatech-com-agent-card.json
+discovery:
+  path: /.well-known/agent-card.json
+  canonical: true
+  host: www.sursatech.com
+  also_served_at:
+  - https://api.sursatech.com/.well-known/agent-card.json (200, application/json, byte-identical to the www copy; the A2A endpoint host serves its own card)
+  - 'https://sursatech.com/.well-known/agent-card.json (308 permanent redirect to the www copy; the apex serves nothing of its own)'
+  legacy_path: /.well-known/agent.json — 404 on www (Next.js not-found page) and on api (FastAPI {"detail":"Not Found"}); the card lives ONLY at the canonical 1.0 path.
+  linked_from:
+  - https://www.sursatech.com/llms.txt ("Agent card (A2A)" under "For AI agents")
+  - https://www.sursatech.com/sitemap.xml (the card URL is a sitemap entry)
+  - https://www.sursatech.com/.well-known/api-catalog (RFC 9727 linkset, relation https://a2a-protocol.org/rels/agent-card)
+  note: 'Ownership is not in question: the card is served from the company website and from the api.sursatech.com endpoint host it names; provider.organization is "SursaTech" with provider.url https://www.sursatech.com; the same organization owns the GitHub org (sursatech, "Sursa Technology Pvt. Ltd.", Kathmandu) and the schema.org ProfessionalService markup on every page (legalName "Sursa Technology Private Limited"); the OAuth discovery documents on both hosts name api.sursatech.com as issuer, and the a2aregistry.org listing that surfaced this company points at this exact URL.'
+conformance:
+  spec: A2A 1.0.0
+  grade: conformant
+  protocol_version: '1.0'
+  preferred_transport: JSONRPC
+  hard_checks:
+    capabilities_is_object: true
+    protocolVersion_present: true
+    skills_is_array: true
+  optional_present:
+  - preferredTransport
+  - defaultInputModes
+  - defaultOutputModes
+  - securitySchemes
+  - security
+  - provider
+  deviations: []
+  observations:
+  - 'protocolVersion is the string "1.0", not a three-part version ("1.0.0" / "0.3.0"); supportedInterfaces[].protocolVersion repeats "1.0".'
+  - 'Dual-shape card: it carries the A2A 1.0 fields (supportedInterfaces[] with protocolBinding, securityRequirements[].schemes) AND the 0.3-era fields (url, preferredTransport, additionalInterfaces[] with transport, security[]) side by side, so both generations of client resolve the same endpoint.'
+  - 'capabilities declares only streaming: true; pushNotifications and stateTransitionHistory are omitted (absent, not false).'
+  - No documentationUrl and no iconUrl on the card; the human documentation is https://api.sursatech.com/auth.md (named by the OAuth metadata, not by the card).
+  - 'Vendor extensions x-sursatech-registrationUrl and x-sursatech-tokenUrl point at the anonymous self-registration and token endpoints; the same URLs are published as registration_endpoint / token_endpoint in the RFC 8414 metadata.'
+  - 'jwks_uri (https://api.sursatech.com/.well-known/jwks.json) serves {"keys":[]} — consistent with bearerFormat "opaque": tokens are not JWTs and there is nothing to verify offline.'
+x-evidence:
+  fetched: '2026-09-19'
+  url: https://www.sursatech.com/.well-known/agent-card.json
+  http_status: 200
+  content_type: application/json; charset=utf-8
+  body_bytes: 6127
+  body_parses_as: JSON object with AgentCard shape (name, version, url, protocolVersion, capabilities, skills, securitySchemes, provider, supportedInterfaces all present)
+  corroborating_probes:
+  - url: https://api.sursatech.com/.well-known/agent-card.json
+    http_status: 200
+    content_type: application/json
+    note: identical bytes to the www copy
+  - url: https://www.sursatech.com/.well-known/agent.json
+    http_status: 404
+    note: legacy path not served (Next.js not-found page, text/html ~15.6 KB)
+  - url: https://www.sursatech.com/.well-known/sursatech-negative-control-9f1c2e.json
+    http_status: 404
+    note: negative control — the host does not echo /.well-known/* requests; the card hit is real
+  - url: https://api.sursatech.com/api/a2a
+    method: GET
+    http_status: 405
+    body: '{"detail":"Method Not Allowed"}'
+    note: the declared A2A interface exists and expects a POST
+  - url: https://api.sursatech.com/api/a2a
+    method: POST JSON-RPC SendMessage (anonymous, empty params)
+    http_status: 401
+    body: '{"detail":"Missing bearer token"}'
+    response_headers:
+      www-authenticate: Bearer realm="SursaTech A2A", resource_metadata="https://api.sursatech.com/.well-known/oauth-protected-resource"
+    note: 'The A2A 1.0 method names (SendMessage, GetTask) are routed and bearer-gated exactly as the card''s securitySchemes/security declare, and the 401 carries an RFC 9728 resource_metadata pointer. A callable, auth-gated agent surface.'
+  - url: https://api.sursatech.com/api/a2a
+    method: POST JSON-RPC message/send and tasks/get (0.3-era method names, anonymous)
+    http_status: 200
+    body: '{"jsonrpc":"2.0","id":1,"error":{"code":-32601,"message":"Method not found"}}'
+    note: 'The 0.3 method names are NOT implemented — only the 1.0 names are — so a 0.3-era client that resolves this card via its legacy url/preferredTransport fields will reach the endpoint and then fail with -32601.'
+  - url: https://api.sursatech.com/health
+    http_status: 200
+    body: '{"status":"ok","environment":"Production"}'
+    note: named as the status link in the RFC 9727 api-catalog linkset
+  credentials_note: 'No credential was used for any probe. POST /api/a2a/register accepts an anonymous empty body and returns a live bearer token (auth.md documents this as the intended self-registration for discovery agents); this profile did not use that token, so every authenticated method, the extended card and the skills'' input shapes remain unverified here.'
+agent_card:
+  name: SursaTech AI Advisor
+  description: 'SursaTech AI Advisor for an AI-native product engineering company in Kathmandu, Nepal, founded in 2017. Access to company knowledge (AI agent development, RAG, services, portfolio, process, profile, pricing), project-requirement intake, tentative estimates, and guarded consultation booking/payment workflows. Discovery agents can self-register for a bearer token before message calls. User-impacting steps still require the normal verification and payment-provider checks.'
+  version: 1.0.0
+  protocol_version: '1.0'
+  url: https://api.sursatech.com/api/a2a
+  preferred_transport: JSONRPC
+  supported_interfaces:
+  - url: https://api.sursatech.com/api/a2a
+    protocolBinding: JSONRPC
+    protocolVersion: '1.0'
+  provider:
+    organization: SursaTech
+    url: https://www.sursatech.com
+  capabilities:
+    streaming: true
+  default_input_modes:
+  - text/plain
+  default_output_modes:
+  - text/plain
+  - application/json
+  security_schemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: opaque
+      description: Opaque bearer token returned by /api/a2a/register or /api/a2a/token, or minted out-of-band for known partners.
+  security:
+  - bearerAuth: []
+  registration_url: https://api.sursatech.com/api/a2a/register
+  token_url: https://api.sursatech.com/api/a2a/token
+  skill_count: 10
+  skills:
+  - id: get_company_profile
+    name: Get company profile
+    kind: read
+    tags: [company, profile, ai-company, contact]
+  - id: get_services
+    name: Get services
+    kind: read
+    tags: [services, ai-agent-development, rag, ai-product-engineering, qa-automation]
+  - id: get_portfolio_projects
+    name: Get portfolio
+    kind: read
+    tags: [portfolio, case-studies, projects]
+  - id: get_development_process
+    name: Get development process
+    kind: read
+    tags: [process, delivery, consulting]
+  - id: capture_lead_requirement
+    name: Capture lead requirement
+    kind: write
+    tags: [requirements, lead-capture, handoff]
+  - id: estimate_project_timeline_and_price
+    name: Estimate project
+    kind: read
+    tags: [estimate, timeline, pricing]
+  - id: start_consultation_booking
+    name: Start consultation booking
+    kind: write
+    guard: Requires user email and selected time before payment.
+    tags: [booking, consultation, calendar]
+  - id: create_payment_checkout
+    name: Create payment checkout
+    kind: write
+    guard: Only once booking details are collected.
+    tags: [payment, checkout, booking]
+  - id: confirm_paid_booking
+    name: Confirm paid booking
+    kind: write
+    guard: Confirm the booking only after payment has been verified by the configured provider/webhook.
+    tags: [payment, verification, calendar]
+  - id: cancel_or_reschedule_booking
+    name: Cancel or reschedule booking
+    kind: write (reversal)
+    guard: Verification is required before calendar mutation.
+    tags: [booking, reschedule, cancel]
+  skill_kind_note: 'kind is this profile''s reading of each skill description (read = returns company knowledge; write = persists or mutates a lead, booking or payment), not a field on the card. The four "knowledge" skills plus the estimate map onto the agentskills.io index the provider publishes at /.well-known/agent-skills/index.json (see skills/).'

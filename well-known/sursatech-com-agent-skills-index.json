@@ -1,0 +1,33 @@
+{
+  "$schema": "https://agentskills.io/schemas/index/v0.2.0.json",
+  "skills": [
+    {
+      "name": "sursatech-company-profile",
+      "type": "knowledge",
+      "description": "Read SursaTech's AI-native company profile, founding year, Kathmandu location, and contact information.",
+      "url": "https://api.sursatech.com/api/a2a",
+      "sha256": "pending"
+    },
+    {
+      "name": "sursatech-services",
+      "type": "knowledge",
+      "description": "List SursaTech AI agent development, RAG, AI-native product engineering, automation, and QA offerings.",
+      "url": "https://api.sursatech.com/api/a2a",
+      "sha256": "pending"
+    },
+    {
+      "name": "sursatech-portfolio",
+      "type": "knowledge",
+      "description": "Browse SursaTech AI-native product work and client engineering case studies.",
+      "url": "https://api.sursatech.com/api/a2a",
+      "sha256": "pending"
+    },
+    {
+      "name": "sursatech-project-estimate",
+      "type": "tool",
+      "description": "Get a tentative timeline and price estimate for AI agent, SaaS, automation, or product engineering scope.",
+      "url": "https://api.sursatech.com/api/a2a",
+      "sha256": "pending"
+    }
+  ]
+}
