@@ -23,6 +23,17 @@ modified: '2026-09-19'
 tags:
 - AI Agents
 - A2A
+- AI Consulting
+- Product Engineering
+- Software Development
+- RAG
+- QA Automation
+- Nepal
+- Agent-Native
+- Company
+tags_raw:
+- AI Agents
+- A2A
 - Agent-to-Agent
 - AI Consulting
 - Product Engineering
@@ -47,6 +58,11 @@ apis:
   humanURL: https://api.sursatech.com/auth.md
   baseURL: https://api.sursatech.com/api/a2a
   tags:
+  - A2A
+  - AI Agents
+  - AI Consulting
+  - Booking
+  tags_raw:
   - A2A
   - AI Agents
   - Agent-to-Agent
@@ -151,3 +167,10 @@ x-enrichment:
   status: enriched
   artifacts_added: 28
   pass: local-v3
+x-a2a:
+  verified: true
+  probed: '2026-09-26'
+  url: "https://www.sursatech.com/.well-known/agent-card.json"
+  grade: "conformant"
+  protocol_version: "1.0"
+  control: 404
