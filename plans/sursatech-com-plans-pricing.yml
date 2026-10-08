@@ -49,3 +49,23 @@ services_pricing_context:
     description: Ongoing build and iteration after the first release. Monthly retainer, scoped product outcomes, weekly demos.
     price: not published
   note: Consulting services pricing, recorded for context; these are not API plans and are not counted in plan_count beyond the two access models above. The paid consultation itself (the create_payment_checkout skill) has no published price.
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - free
+  - negotiated
+  units: []
+  plans:
+  - name: Anonymous self-registered agent (A2A)
+    access: free
+    model: free
+    model_how: derived
+    units: []
+    periods: []
+  - name: Known partner (out-of-band token)
+    access: negotiated
+    model: negotiated
+    model_how: stated
+    units: []
+    periods: []
