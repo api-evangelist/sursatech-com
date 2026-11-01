@@ -64,5 +64,105 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-SursaTech is a company surfaced via the API Evangelist harvest backlog (source: a2a-registry) and added to the network as a stub for full-pipeline profiling.
-- https://sursatech.com/
+SursaTech (Sursa Technology Private Limited) is an AI-native product engineering and consulting company founded in 2017 in Kathmandu, Nepal, building production AI agents, RAG and knowledge systems, AI-enabled SaaS products, automation and integrations, and QA leadership for clients in Nepal, Japan, Norway, the United States and the United Kingdom, and operating its own products (Humafu, AcademyKit, Buy Me a Momo). Its public machine surface is an A2A 1.0 agent — the SursaTech AI Advisor — served as a conformant agent card at /.well-known/agent-card.json with a JSON-RPC endpoint at api.sursatech.com/api/a2a: ten skills covering company knowledge (profile, services, portfolio, process, pricing), lead-requirement capture, tentative project estimates and guarded consultation booking, payment and cancel/reschedule flows. Any agent can self-register anonymously for an opaque bearer token; the provider publishes RFC 8414/OIDC authorization-server metadata, RFC 9728 protected-resource metadata, an RFC 9727 api-catalog, an agentskills.io skill index and an llms.txt, but no OpenAPI, SDK, MCP server, status page, pricing for the API, or legal pages.
+
+**Areas:** AI Agents · A2A · AI Consulting · Product Engineering · Software Development · RAG · QA Automation · Nepal · Agent-Native · Company
+
+## SursaTech on APIs.io
+
+Everything profiled for SursaTech is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/sursatech-com/](https://apis.io/providers/sursatech-com/)** — or go straight to one of the APIs or properties below.
+
+### APIs (1)
+
+- [SursaTech AI Advisor A2A API](https://apis.io/apis/sursatech-com/sursatech-ai-advisor-a2a-api/) — An A2A 1.0 agent (JSON-RPC 2.0 over HTTP POST, streaming declared) exposing ten skills: get_company_profile, get_services, get_portfolio_projects,…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Sursatech Com Authentication](https://apis.io/security/sursatech-com/sursatech-com-authentication/)
+- [Sursatech Com Domain Security](https://apis.io/security/sursatech-com/sursatech-com-domain-security/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Sursatech Com Scopes](https://apis.io/scopes/sursatech-com/sursatech-com-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Sursatech Com Plans Pricing](https://apis.io/plans/sursatech-com/sursatech-com-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Sursatech Com Rate Limits](https://apis.io/rate-limits/sursatech-com/sursatech-com-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.sursatech.com/)
+- [Documentation](https://api.sursatech.com/auth.md)
+- [Pricing](https://www.sursatech.com/pricing)
+- [GitHub](https://github.com/sursatech)
+
+## API Evangelist rating
+
+**Kin Score 27.7** — thin · rubric 0.24.0 · scored 2026-10-20
+
+| Facet | Score |
+|---|---|
+| Discoverability | 73.2 |
+| Contract quality | 0.0 |
+| Contract governance | 18.2 |
+| Operational transparency | 34.2 |
+| Developer ergonomics | 28.6 |
+| Access clarity | 31.6 |
+
+**Agent readiness 32.0** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | — |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | yes |
+| Well Known Catalog | yes |
+| Consent Identity | — |
+| Agent Card | conformant |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+
+**Regulatory alignment 26.5** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/sursatech-com/](https://apis.io/providers/sursatech-com/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for SursaTech: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/sursatech-com/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
